@@ -1,6 +1,6 @@
 const editor = document.querySelector("#editor");
 const lineTemplate = document.querySelector("#lineTemplate");
-const formatButtons = [...document.querySelectorAll(".format-button")];
+const formatButtons = [...document.querySelectorAll(".format-button[data-format]")];
 const sceneList = document.querySelector("#sceneList");
 const castList = document.querySelector("#castList");
 const castCount = document.querySelector("#castCount");
@@ -16,15 +16,13 @@ const saveState = document.querySelector("#saveState");
 const focusMode = document.querySelector("#focusMode");
 const autoCaps = document.querySelector("#autoCaps");
 
-const storeKey = "screentype-draft-v1";
+const storeKey = "screentype-mobile-draft-v1";
 const sampleLines = [
   ["scene", "INT. COFFEE SHOP - NIGHT"],
-  ["action", "Rain frets against the front window. MAYA, 30s, watches a cursor blink on her laptop."],
+  ["action", "Rain taps the front window. MAYA watches a cursor blink on her phone."],
   ["character", "MAYA"],
   ["dialogue", "A blank page is only scary until it starts telling on you."],
-  ["transition", "CUT TO:"],
-  ["scene", "EXT. CITY ROOFTOP - LATER"],
-  ["action", "The skyline glows in broken strips of green, amber, and white."],
+  ["transition", "CUT TO:"]
 ];
 
 let saveTimer = null;
@@ -38,14 +36,12 @@ function makeLine(format = "action", text = "") {
   return line;
 }
 
-function ensureEditorHasLine() {
-  if (!editor.querySelector(".line")) {
-    editor.append(makeLine("scene", ""));
-  }
-}
-
 function getLines() {
   return [...editor.querySelectorAll(".line")];
+}
+
+function ensureEditorHasLine() {
+  if (!editor.querySelector(".line")) editor.append(makeLine("scene", ""));
 }
 
 function getCurrentLine() {
@@ -58,13 +54,19 @@ function getCurrentLine() {
 }
 
 function placeCaretAtEnd(element) {
-  element.focus();
+  element.focus({ preventScroll: true });
   const range = document.createRange();
   range.selectNodeContents(element);
   range.collapse(false);
   const selection = window.getSelection();
   selection.removeAllRanges();
   selection.addRange(range);
+}
+
+function updateActiveFormat(format) {
+  formatButtons.forEach((button) => {
+    button.classList.toggle("active", button.dataset.format === format);
+  });
 }
 
 function setFormat(line, format) {
@@ -76,12 +78,6 @@ function setFormat(line, format) {
   }
   updateActiveFormat(format);
   refresh();
-}
-
-function updateActiveFormat(format) {
-  formatButtons.forEach((button) => {
-    button.classList.toggle("active", button.dataset.format === format);
-  });
 }
 
 function nextFormat(format, text) {
@@ -110,8 +106,7 @@ function normalizeEditor() {
       editor.insertBefore(makeLine("action", node.textContent), node);
       node.remove();
     } else if (node.nodeType === Node.ELEMENT_NODE && !node.classList.contains("line")) {
-      const text = node.textContent;
-      editor.insertBefore(makeLine("action", text), node);
+      editor.insertBefore(makeLine("action", node.textContent), node);
       node.remove();
     }
   });
@@ -142,6 +137,7 @@ function updateCast() {
     .map((line) => line.textContent.trim())
     .filter(Boolean))]
     .sort((a, b) => a.localeCompare(b));
+
   castList.innerHTML = "";
   names.forEach((name) => {
     const chip = document.createElement("span");
@@ -160,10 +156,8 @@ function updateStats() {
 }
 
 function updateTitlePage() {
-  const title = scriptTitle.value.trim() || "Untitled Screenplay";
-  const author = scriptAuthor.value.trim() || "Creator name";
-  titlePageTitle.textContent = title;
-  titlePageAuthor.textContent = author;
+  titlePageTitle.textContent = scriptTitle.value.trim() || "Untitled Screenplay";
+  titlePageAuthor.textContent = scriptAuthor.value.trim() || "Creator name";
 }
 
 function updateCurrentLine() {
@@ -180,20 +174,20 @@ function serialize() {
     dark: document.body.classList.contains("dark"),
     lines: getLines().map((line) => ({
       format: line.dataset.format,
-      text: line.textContent,
-    })),
+      text: line.textContent
+    }))
   };
 }
 
 function saveDraft() {
   localStorage.setItem(storeKey, JSON.stringify(serialize()));
-  saveState.textContent = "Saved locally";
+  saveState.textContent = "Saved on this iPhone";
 }
 
 function scheduleSave() {
   saveState.textContent = "Saving...";
   clearTimeout(saveTimer);
-  saveTimer = setTimeout(saveDraft, 350);
+  saveTimer = setTimeout(saveDraft, 300);
 }
 
 function refresh() {
@@ -213,9 +207,10 @@ function loadDraft() {
     refresh();
     return;
   }
+
   const draft = JSON.parse(saved);
   scriptTitle.value = draft.title || "Untitled Screenplay";
-  scriptAuthor.value = draft.author || (draft.credit && draft.credit !== "Written by" ? draft.credit : "");
+  scriptAuthor.value = draft.author || "";
   scratchpad.value = draft.scratch || "";
   document.body.classList.toggle("dark", Boolean(draft.dark));
   editor.innerHTML = "";
@@ -298,14 +293,6 @@ document.querySelector("#addScene").addEventListener("click", () => {
   insertLineAfter(current, "scene");
 });
 
-document.querySelector("#themeToggle").addEventListener("click", () => {
-  document.body.classList.toggle("dark");
-  refresh();
-});
-
-document.querySelector("#downloadFountain").addEventListener("click", downloadFountain);
-document.querySelector("#printDraft").addEventListener("click", () => window.print());
-
 document.querySelector("#newDraft").addEventListener("click", () => {
   if (!confirm("Start a new blank draft?")) return;
   editor.innerHTML = "";
@@ -316,6 +303,13 @@ document.querySelector("#newDraft").addEventListener("click", () => {
   refresh();
   placeCaretAtEnd(editor.firstElementChild);
 });
+
+document.querySelector("#themeToggle").addEventListener("click", () => {
+  document.body.classList.toggle("dark");
+  refresh();
+});
+
+document.querySelector("#downloadFountain").addEventListener("click", downloadFountain);
 
 [scriptTitle, scriptAuthor, scratchpad, focusMode, autoCaps].forEach((control) => {
   control.addEventListener("input", refresh);

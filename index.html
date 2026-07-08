@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <title>ScreenType</title>
+    <title>ScreenType Mobile</title>
     <meta name="theme-color" content="#0f766e">
     <meta name="apple-mobile-web-app-title" content="ScreenType">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -14,110 +14,74 @@
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
-    <div class="app-shell">
-      <aside class="sidebar">
-        <header class="brand">
-          <div>
-            <h1>ScreenType</h1>
-            <p id="saveState">Draft ready</p>
-          </div>
-          <button class="icon-button" id="themeToggle" type="button" aria-label="Toggle theme" title="Toggle theme">O</button>
-        </header>
+    <div class="app">
+      <header class="app-header">
+        <div>
+          <h1>ScreenType</h1>
+          <p id="saveState">Draft ready</p>
+        </div>
+        <div class="header-actions">
+          <button id="themeToggle" class="icon-button" type="button" aria-label="Toggle theme">O</button>
+          <button id="downloadFountain" class="icon-button" type="button" aria-label="Download Fountain">V</button>
+        </div>
+      </header>
 
-        <nav class="tool-group" aria-label="Screenplay element types">
-          <button class="format-button active" type="button" data-format="scene">Scene</button>
-          <button class="format-button" type="button" data-format="action">Action</button>
-          <button class="format-button" type="button" data-format="character">Character</button>
-          <button class="format-button" type="button" data-format="parenthetical">Paren</button>
-          <button class="format-button" type="button" data-format="dialogue">Dialogue</button>
-          <button class="format-button" type="button" data-format="transition">Transition</button>
-        </nav>
+      <section class="title-editor" aria-label="Title page fields">
+        <input id="scriptTitle" value="Untitled Screenplay" aria-label="Script title">
+        <label>
+          <span>Written by</span>
+          <input id="scriptAuthor" value="" aria-label="Creator name" placeholder="Creator name">
+        </label>
+      </section>
 
-        <section class="panel">
-          <div class="panel-heading">
-            <h2>Outline</h2>
-            <button class="icon-button" id="addScene" type="button" aria-label="Add scene" title="Add scene">+</button>
+      <main class="pages">
+        <section class="page title-page" aria-label="Title page preview">
+          <div id="titlePageTitle" class="title-page-title">Untitled Screenplay</div>
+          <div class="title-page-credit">
+            <div>Written by</div>
+            <div id="titlePageAuthor">Creator name</div>
           </div>
-          <ol class="scene-list" id="sceneList"></ol>
         </section>
 
-        <section class="panel">
-          <div class="panel-heading">
-            <h2>Cast</h2>
-            <span id="castCount">0</span>
-          </div>
-          <div class="chip-list" id="castList"></div>
-        </section>
-      </aside>
-
-      <main class="workspace">
-        <header class="topbar">
-          <div class="title-fields">
-            <input id="scriptTitle" value="Untitled Screenplay" aria-label="Title">
-            <label class="credit-field">
-              <span>Written by</span>
-              <input id="scriptAuthor" value="" aria-label="Creator name" placeholder="Creator name">
-            </label>
-          </div>
-          <div class="actions">
-            <button class="icon-button" id="newDraft" type="button" aria-label="New draft" title="New draft">N</button>
-            <button class="icon-button" id="downloadFountain" type="button" aria-label="Download Fountain file" title="Download Fountain file">V</button>
-            <button class="icon-button" id="printDraft" type="button" aria-label="Print" title="Print">P</button>
-          </div>
-        </header>
-
-        <section class="editor-wrap" aria-label="Screenplay editor">
-          <div class="page title-page" aria-label="Title page">
-            <div class="title-page-main">
-              <div id="titlePageTitle" class="title-page-title">Untitled Screenplay</div>
-            </div>
-            <div class="title-page-credit">
-              <div>Written by</div>
-              <div id="titlePageAuthor" class="title-page-author">Creator name</div>
-            </div>
-          </div>
-          <div class="page script-page">
-            <div id="editor" class="editor" contenteditable="true" spellcheck="true" aria-label="Script body"></div>
-          </div>
+        <section class="page script-page" aria-label="Screenplay editor">
+          <div id="editor" class="editor" contenteditable="true" spellcheck="true" aria-label="Script body"></div>
         </section>
       </main>
 
-      <aside class="inspector">
-        <section class="panel stats">
-          <h2>Draft</h2>
-          <dl>
-            <div>
-              <dt>Scenes</dt>
-              <dd id="sceneCount">0</dd>
-            </div>
-            <div>
-              <dt>Pages</dt>
-              <dd id="pageCount">1</dd>
-            </div>
-            <div>
-              <dt>Words</dt>
-              <dd id="wordCount">0</dd>
-            </div>
-          </dl>
-        </section>
-
-        <section class="panel">
-          <h2>Scratch</h2>
+      <section class="mobile-panels">
+        <details>
+          <summary>Outline <span id="sceneCount">0</span></summary>
+          <ol id="sceneList" class="scene-list"></ol>
+        </details>
+        <details>
+          <summary>Cast <span id="castCount">0</span></summary>
+          <div id="castList" class="chip-list"></div>
+        </details>
+        <details>
+          <summary>Scratch</summary>
           <textarea id="scratchpad" aria-label="Scratch notes" placeholder="Loose ideas, beats, props, questions..."></textarea>
-        </section>
+        </details>
+        <details>
+          <summary>Draft</summary>
+          <dl class="stats">
+            <div><dt>Pages</dt><dd id="pageCount">2</dd></div>
+            <div><dt>Words</dt><dd id="wordCount">0</dd></div>
+          </dl>
+          <label class="toggle-row"><input id="focusMode" type="checkbox">Current line</label>
+          <label class="toggle-row"><input id="autoCaps" type="checkbox" checked>Caps for cues</label>
+        </details>
+      </section>
 
-        <section class="panel">
-          <h2>Focus</h2>
-          <label class="toggle-row">
-            <input id="focusMode" type="checkbox">
-            <span>Current line</span>
-          </label>
-          <label class="toggle-row">
-            <input id="autoCaps" type="checkbox" checked>
-            <span>Caps for cues</span>
-          </label>
-        </section>
-      </aside>
+      <nav class="format-bar" aria-label="Screenplay format controls">
+        <button class="format-button active" type="button" data-format="scene">Scene</button>
+        <button class="format-button" type="button" data-format="action">Action</button>
+        <button class="format-button" type="button" data-format="character">Char</button>
+        <button class="format-button" type="button" data-format="parenthetical">Paren</button>
+        <button class="format-button" type="button" data-format="dialogue">Dialog</button>
+        <button class="format-button" type="button" data-format="transition">Trans</button>
+        <button id="addScene" class="format-button utility" type="button">+ Scene</button>
+        <button id="newDraft" class="format-button utility" type="button">New</button>
+      </nav>
     </div>
 
     <template id="lineTemplate">
