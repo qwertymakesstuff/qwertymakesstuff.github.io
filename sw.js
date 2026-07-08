@@ -1,4 +1,4 @@
-const cacheName = "screentype-mobile-v1";
+const cacheName = "screentype-v2";
 const appShell = [
   "./",
   "./index.html",
@@ -26,6 +26,7 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+
   event.respondWith(
     caches.match(event.request)
       .then((cached) => cached || fetch(event.request)

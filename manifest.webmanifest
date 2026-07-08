@@ -1,7 +1,7 @@
 {
-  "name": "ScreenType Mobile",
+  "name": "ScreenType",
   "short_name": "ScreenType",
-  "description": "A mobile-first screenplay writing app.",
+  "description": "A screenplay-focused writing app.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
