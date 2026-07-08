@@ -1,0 +1,19 @@
+{
+  "name": "ScreenType",
+  "short_name": "ScreenType",
+  "description": "A screenplay-focused writing app.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#eef1f4",
+  "theme_color": "#0f766e",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icons/screentype.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
